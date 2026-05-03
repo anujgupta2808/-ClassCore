@@ -67,7 +67,3 @@ No frameworks. No build tools required for the frontend.
 - The `run.bat` file is not required for the frontend demo.
 
 ---
-
-  📄 License
-
-MIT — free to use, modify, and distribute.
