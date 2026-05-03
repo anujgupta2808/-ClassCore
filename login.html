@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ClassCore — Login</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="auth-body">
+
+  <div id="toast-container"></div>
+
+  <div class="auth-page">
+
+    <!-- Left panel -->
+    <div class="auth-left auth-left-banner">
+      <img src="banner.svg" alt="ClassCore" class="auth-banner-img" />
+    </div>
+
+    <!-- Right panel -->
+    <div class="auth-right">
+      <div class="auth-card">
+
+        <!-- Tabs -->
+        <div class="auth-tabs">
+          <button class="auth-tab active" id="tab-login" onclick="switchTab('login')">Login</button>
+          <button class="auth-tab" id="tab-signup" onclick="switchTab('signup')">Sign Up</button>
+        </div>
+
+        <div class="auth-forms-wrap">
+
+          <!-- Login Form -->
+          <form id="login-form" class="auth-form" onsubmit="handleLogin(event)">
+            <div class="auth-form-inner">
+              <h2>Welcome back</h2>
+              <p class="auth-sub">Sign in to your account</p>
+              <div class="auth-field">
+                <label>Username</label>
+                <input type="text" id="login-username" placeholder="Enter your username" required autocomplete="username" />
+              </div>
+              <div class="auth-field">
+                <label>Password</label>
+                <div class="pw-wrap">
+                  <input type="password" id="login-password" placeholder="Enter your password" required autocomplete="current-password" />
+                  <button type="button" class="pw-toggle" onclick="togglePw('login-password', this)">👁</button>
+                </div>
+              </div>
+              <div class="auth-field remember-row">
+                <label class="checkbox-label">
+                  <input type="checkbox" id="remember-me" />
+                  <span>Remember me</span>
+                </label>
+              </div>
+              <button type="submit" class="btn-auth">Sign In →</button>
+              <p class="auth-switch">Don't have an account? <a onclick="switchTab('signup')">Sign up</a></p>
+            </div>
+          </form>
+
+          <!-- Signup Form -->
+          <form id="signup-form" class="auth-form hidden" onsubmit="handleSignup(event)">
+            <div class="auth-form-inner">
+              <h2>Create account</h2>
+              <p class="auth-sub">Join ClassCore today</p>
+              <div class="auth-field">
+                <label>Full Name</label>
+                <input type="text" id="signup-name" placeholder="Enter your full name" required />
+              </div>
+              <div class="auth-field">
+                <label>Username</label>
+                <input type="text" id="signup-username" placeholder="Choose a username" required autocomplete="username" />
+              </div>
+              <div class="auth-field">
+                <label>Password</label>
+                <div class="pw-wrap">
+                  <input type="password" id="signup-password" placeholder="Create a password (min 6 chars)" required autocomplete="new-password" minlength="6" />
+                  <button type="button" class="pw-toggle" onclick="togglePw('signup-password', this)">👁</button>
+                </div>
+              </div>
+              <div class="auth-field">
+                <label>Confirm Password</label>
+                <div class="pw-wrap">
+                  <input type="password" id="signup-confirm" placeholder="Repeat your password" required autocomplete="new-password" />
+                  <button type="button" class="pw-toggle" onclick="togglePw('signup-confirm', this)">👁</button>
+                </div>
+              </div>
+              <button type="submit" class="btn-auth">Create Account →</button>
+              <p class="auth-switch">Already have an account? <a onclick="switchTab('login')">Sign in</a></p>
+            </div>
+          </form>
+
+        </div><!-- /.auth-forms-wrap -->
+
+      </div>
+
+      <button class="auth-theme-btn" id="auth-theme-toggle" onclick="toggleAuthTheme()">🌙</button>
+    </div>
+
+  </div>
+
+  <script src="auth.js"></script>
+</body>
+</html>

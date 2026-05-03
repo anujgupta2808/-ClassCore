@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ClassCore — Student Management System</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <div id="toast-container"></div>
+
+  <!-- Delete Modal -->
+  <div id="modal-overlay" class="modal-overlay hidden">
+    <div class="modal">
+      <div class="modal-icon">🗑️</div>
+      <h3>Delete Student?</h3>
+      <p id="modal-msg">This action cannot be undone.</p>
+      <div class="modal-actions">
+        <button id="modal-confirm" class="btn-danger">Yes, Delete</button>
+        <button id="modal-cancel" class="btn-ghost">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="nav-brand">
+      <span class="nav-logo">🎓</span>
+      <div class="nav-title">
+        <span class="nav-name">ClassCore</span>
+        <span class="nav-sub">Student Management System</span>
+      </div>
+    </div>
+    <div class="nav-right">
+      <span class="nav-badge" id="academic-year"></span>
+      <div class="ay-dropdown hidden" id="ay-dropdown"></div>
+      <div class="nav-user" id="nav-user"></div>
+      <button id="theme-toggle" class="btn-icon" title="Toggle theme">🌙</button>
+      <button id="logout-btn" class="btn-icon btn-logout" title="Logout">⏻</button>
+    </div>
+  </nav>
+
+  <!-- Page Layout -->
+  <div class="page">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-section">
+        <p class="sidebar-label">Overview</p>
+        <div class="sidebar-stat">
+          <span class="ss-icon">👥</span>
+          <div>
+            <div class="ss-num" id="stat-total">0</div>
+            <div class="ss-label">Total Students</div>
+          </div>
+        </div>
+        <div class="sidebar-stat">
+          <span class="ss-icon">🏛️</span>
+          <div>
+            <div class="ss-num" id="stat-depts">0</div>
+            <div class="ss-label">Departments</div>
+          </div>
+        </div>
+        <div class="sidebar-stat">
+          <span class="ss-icon">📅</span>
+          <div>
+            <div class="ss-num" id="stat-latest">—</div>
+            <div class="ss-label">Latest Enrolled</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <p class="sidebar-label">Quick Actions</p>
+        <button class="sidebar-btn" id="sidebar-add-btn">➕ Add Student</button>
+        <button class="sidebar-btn secondary" id="export-btn">⬇ Export CSV</button>
+      </div>
+
+      <div class="sidebar-section">
+        <p class="sidebar-label">Departments</p>
+        <ul class="dept-list-sidebar" id="dept-list-sidebar">
+          <li class="dept-empty">No data yet</li>
+        </ul>
+        <button class="sidebar-btn dept-all-btn" id="dept-all-btn" style="display:none;margin-top:8px">✕ Show All Students</button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main">
+
+      <!-- Add / Edit Form -->
+      <section class="card" id="form-card">
+        <div class="card-header">
+          <h2 class="card-title">
+            <span id="form-title-icon">📋</span>
+            <span id="form-title-text">Add New Student</span>
+          </h2>
+          <button class="btn-icon-sm" id="form-collapse-btn" title="Collapse">▲</button>
+        </div>
+        <div id="form-body">
+          <form id="student-form">
+            <input type="hidden" id="student-id" />
+            <div class="form-grid">
+              <div class="field">
+                <label for="name">Full Name <span class="req">*</span></label>
+                <input type="text" id="name" placeholder="e.g. Anuj Gupta" required />
+              </div>
+              <div class="field">
+                <label for="roll">Roll Number <span class="req">*</span></label>
+                <input type="text" id="roll" placeholder="e.g. CS-2024-001" required />
+              </div>
+              <div class="field">
+                <label for="department">Department <span class="req">*</span></label>
+                <input type="text" id="department" list="dept-datalist" placeholder="e.g. Computer Science" required />
+                <datalist id="dept-datalist">
+                  <option value="Computer Science">
+                  <option value="Information Technology">
+                  <option value="Software Engineering">
+                  <option value="Mathematics">
+                  <option value="Physics">
+                  <option value="Business Administration">
+                  <option value="Civil Engineering">
+                  <option value="Electrical Engineering">
+                </datalist>
+              </div>
+              <div class="field">
+                <label for="enrolled">Enrollment Date</label>
+                <input type="date" id="enrolled" />
+              </div>
+            </div>
+            <div class="form-actions">
+              <button type="submit" id="save-btn" class="btn-primary">➕ Add Student</button>
+              <button type="button" id="clear-btn" class="btn-ghost">✖ Clear</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- Student Table -->
+      <section class="card">
+        <div class="card-header">
+          <h2 class="card-title">📊 Student Records</h2>
+          <div id="dept-filter-pill" class="dept-filter-pill" style="display:none"></div>
+          <div class="table-controls">
+            <div class="search-box">
+              <span>🔍</span>
+              <input type="text" id="search-input" placeholder="Search by name, roll, dept…" />
+            </div>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th class="sortable" data-col="name">Name <span class="sort-arrow">↕</span></th>
+                <th class="sortable" data-col="roll">Roll No <span class="sort-arrow">↕</span></th>
+                <th class="sortable" data-col="department">Department <span class="sort-arrow">↕</span></th>
+                <th class="sortable" data-col="enrolled">Enrolled <span class="sort-arrow">↕</span></th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="student-table-body"></tbody>
+          </table>
+        </div>
+
+        <div id="empty-state" class="empty-state">
+          <div class="empty-illus">🎒</div>
+          <p>No students found</p>
+          <small>Use the form above to add your first student.</small>
+        </div>
+
+        <div class="table-footer">
+          <span id="result-count" class="result-count"></span>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
