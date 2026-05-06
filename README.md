@@ -1,5 +1,5 @@
   ClassCore — Student Management System
-
+(use in laptop or desktop only for better ui/ux exeprience)
 A polished student record portal with a login/signup flow, live search, table actions, and CSV export.
 
 > Start the app by opening `login.html` in a browser.
